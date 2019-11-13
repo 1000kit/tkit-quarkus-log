@@ -1,16 +1,16 @@
-# 1000kit-quarkus-log
+# tkit-quarkus-log
 
-1000kit quarkus logger extension
+tkit quarkus logger extension
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-green?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Maven Central](https://img.shields.io/maven-central/v/org.1000kit.quarkus/1000kit-quarkus-log?logo=java&style=for-the-badge)](https://maven-badges.herokuapp.com/maven-central/org.1000kit.quarkus/1000kit-quarkus-log)
+[![Maven Central](https://img.shields.io/maven-central/v/org.tkit.quarkus/tkit-quarkus-log?logo=java&style=for-the-badge)](https://maven-badges.herokuapp.com/maven-central/org.tkit.quarkus/tkit-quarkus-log)
 
 ### Maven configuration
 
 ```xml
 <dependency>
-    <groupId>org.1000kit.quarkus</groupId>
-    <artifactId>1000kit-quarkus-log</artifactId>
+    <groupId>org.tkit.quarkus</groupId>
+    <artifactId>tkit-quarkus-log</artifactId>
     <version>x.y.z-SNAPSHOT</version>
 <dependency>
 ```

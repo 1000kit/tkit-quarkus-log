@@ -4,14 +4,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.1000kit.quarkus</groupId>
-    <artifactId>1000kit-quarkus-log-parent</artifactId>
+    <groupId>org.tkit.quarkus</groupId>
+    <artifactId>tkit-quarkus-log-parent</artifactId>
     <version>0.2.0-SNAPSHOT</version>
-    <name>1000kit-quarkus-log-parent</name>
+    <name>tkit-quarkus-log-parent</name>
     <packaging>pom</packaging>
 
     <description>1000kit log library for the Quarkus framework</description>
-    <url>https://gitlab.com/1000kit/quarkus/1000kit-quarkus-log</url>
+    <url>https://gitlab.com/1000kit/quarkus/tkit-quarkus-log</url>
 
     <licenses>
         <license>
@@ -22,14 +22,14 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://gitlab.com/1000kit/quarkus/1000kit-quarkus-log.git</connection>
-        <developerConnection>scm:git:git@gitlab.com:1000kit/quarkus/1000kit-quarkus-log.git</developerConnection>
-        <url>https://gitlab.com/1000kit/quarkus/1000kit-quarkus-log</url>
+        <connection>scm:git:https://gitlab.com/1000kit/quarkus/tkit-quarkus-log.git</connection>
+        <developerConnection>scm:git:git@gitlab.com:1000kit/quarkus/tkit-quarkus-log.git</developerConnection>
+        <url>https://gitlab.com/1000kit/quarkus/tkit-quarkus-log</url>
     </scm>
 
     <organization>
-        <name>1000kit</name>
-        <url>http://www.1000kit.org</url>
+        <name>tkit</name>
+        <url>http://www.tkit.org</url>
     </organization>
 
     <developers>
