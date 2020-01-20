@@ -20,6 +20,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -37,8 +38,9 @@ import java.util.concurrent.CompletionStage;
  *
  * @author Andrej Petras
  */
-@LoggerService
 @Interceptor
+@LoggerService
+@Priority(Interceptor.Priority.PLATFORM_BEFORE)
 public class LoggerServiceInterceptor {
 
     /**

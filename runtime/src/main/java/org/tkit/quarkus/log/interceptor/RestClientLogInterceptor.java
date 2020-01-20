@@ -33,9 +33,7 @@ import java.text.MessageFormat;
 /**
  * The rest client log interceptor
  *
- * @author Andrej Petras
  */
-@Provider
 @LoggerService(log = false)
 public class RestClientLogInterceptor implements ClientRequestFilter, ClientResponseFilter {
 
@@ -52,14 +50,14 @@ public class RestClientLogInterceptor implements ClientRequestFilter, ClientResp
     /**
      * The message start.
      */
-    private static MessageFormat messageStart;
+    private MessageFormat messageStart;
 
     /**
      * The message succeed.
      */
-    private static MessageFormat messageSucceed;
+    private MessageFormat messageSucceed;
 
-    static {
+    public RestClientLogInterceptor() {
         Config config = ConfigProvider.getConfig();
         messageStart = new MessageFormat(config.getOptionalValue("org.tkit.logger.rs.client.start", String.class).orElse("{0} {1} [{2}] started."));
         messageSucceed = new MessageFormat(config.getOptionalValue("org.tkit.logger.rs.client.succeed", String.class).orElse("{0} {1} finished in [{2}s] with [{3}-{4},{5}]."));

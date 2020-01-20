@@ -31,7 +31,6 @@ import java.text.MessageFormat;
 /**
  * The rest log interceptor.
  */
-@Provider
 @LoggerService(log = false)
 public class RestLogInterceptor implements ContainerRequestFilter, ContainerResponseFilter {
 
