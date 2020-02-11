@@ -34,6 +34,7 @@ import org.tkit.quarkus.log.interceptor.LoggerService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Singleton;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
