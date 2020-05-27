@@ -25,8 +25,9 @@ import javax.inject.Inject;
 import javax.ws.rs.container.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import java.text.MessageFormat;
+
+import static org.tkit.quarkus.log.interceptor.LoggerServiceInterceptor.PROP_DISABLE_PROTECTED_METHODS;
 
 /**
  * The rest log interceptor.
@@ -64,14 +65,21 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
      * The resource info.
      */
     @Context
-    private ResourceInfo resourceInfo;
+    ResourceInfo resourceInfo;
 
     /**
      * The rest logger interceptor disable flag.
      */
     @Inject
-    @ConfigProperty(name = "org.lorislab.jel.logger.rs.disable", defaultValue = "false")
-    private boolean disable;
+    @ConfigProperty(name = "tkit.logger.rs.disable", defaultValue = "false")
+    boolean disable;
+
+    /**
+     * Disable the protected methods to log.
+     */
+    @Inject
+    @ConfigProperty(name = PROP_DISABLE_PROTECTED_METHODS, defaultValue = "true")
+    boolean disableProtectedMethod;
 
     /**
      * {@inheritDoc }
@@ -81,7 +89,7 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
         if (disable) {
             return;
         }
-        LoggerService ano = LoggerServiceInterceptor.getLoggerServiceAno(resourceInfo.getResourceClass(), resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod());
+        LoggerService ano = LoggerServiceInterceptor.getLoggerServiceAno(resourceInfo.getResourceClass(), resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod(), disableProtectedMethod);
         requestContext.setProperty(ANO, ano);
 
         if (ano.log()) {

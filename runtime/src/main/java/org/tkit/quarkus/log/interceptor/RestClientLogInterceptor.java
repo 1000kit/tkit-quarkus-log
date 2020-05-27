@@ -27,7 +27,6 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import java.text.MessageFormat;
 
 /**
@@ -67,8 +66,8 @@ public class RestClientLogInterceptor implements ClientRequestFilter, ClientResp
      * The rest client logger interceptor disable flag.
      */
     @Inject
-    @ConfigProperty(name = "org.lorislab.jel.logger.rs.client.disable", defaultValue = "false")
-    private boolean disable;
+    @ConfigProperty(name = "tkit.logger.rs.client.disable", defaultValue = "false")
+    boolean disable;
 
     /**
      * {@inheritDoc }

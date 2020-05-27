@@ -17,6 +17,7 @@ package org.tkit.quarkus.log.interceptor;
 
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.Optional;
@@ -43,11 +45,20 @@ import java.util.concurrent.CompletionStage;
 @Priority(Interceptor.Priority.PLATFORM_BEFORE)
 public class LoggerServiceInterceptor {
 
+    static final String PROP_DISABLE_PROTECTED_METHODS = "tki.logger.method.protected.disable";
+
     /**
      * The logger builder service.
      */
     @Inject
     LoggerBuilderService loggerBuilderService;
+
+    /**
+     * Disable the protected methods to log.
+     */
+    @Inject
+    @ConfigProperty(name = PROP_DISABLE_PROTECTED_METHODS, defaultValue = "true")
+    boolean disableProtectedMethod;
 
     /**
      * The method execution.
@@ -62,7 +73,7 @@ public class LoggerServiceInterceptor {
         Method method = ic.getMethod();
         String className = getObjectClassName(ic.getTarget());
 
-        LoggerService ano = getLoggerServiceAno(ic.getTarget().getClass(), className, method);
+        LoggerService ano = getLoggerServiceAno(ic.getTarget().getClass(), className, method, disableProtectedMethod);
         if (ano.log()) {
 
             Logger logger = LoggerFactory.getLogger(className);
@@ -167,10 +178,14 @@ public class LoggerServiceInterceptor {
      *
      * @param clazz  the class.
      * @param method the method.
+     * @param disableProtectedMethod {@code true} to disable to log protected methods.
      * @return the logger service annotation.
      */
-    public static LoggerService getLoggerServiceAno(Class<?> clazz, String className, Method method) {
+    public static LoggerService getLoggerServiceAno(Class<?> clazz, String className, Method method, boolean disableProtectedMethod) {
 
+        if (disableProtectedMethod && Modifier.isProtected(method.getModifiers())) {
+            return createLoggerService(false, false);
+        }
         Config config = ConfigProvider.getConfig();
         String mc = className + "." + method.getName() + "/tkit-log/";
         String c = className + "/tkit-log/";
