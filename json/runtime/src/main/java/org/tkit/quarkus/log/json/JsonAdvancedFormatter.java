@@ -29,6 +29,7 @@ import javax.json.JsonValue;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
 
+import org.jboss.logmanager.ExtLogRecord;
 import org.jboss.logmanager.PropertyValues;
 import org.jboss.logmanager.formatters.StructuredFormatter;
 
@@ -66,6 +67,8 @@ public class JsonAdvancedFormatter extends StructuredFormatter {
 
     private final Set<String> ignoreKeys = new HashSet<>();
 
+    private final Map<String,String> envKeys = new HashMap<>();
+
     /**
      * Creates a new JSON formatter.
      */
@@ -96,6 +99,12 @@ public class JsonAdvancedFormatter extends StructuredFormatter {
         super(keyOverrides);
         config = new HashMap<>();
         factory = Json.createGeneratorFactory(config);
+    }
+
+    public void addEnvKeys(Map<String, String> envKeys) {
+        if (envKeys != null) {
+            this.envKeys.putAll(envKeys);
+        }
     }
 
     public void addMdcKeys(Map<String, String> mdcKeys) {
@@ -152,6 +161,14 @@ public class JsonAdvancedFormatter extends StructuredFormatter {
                 config.remove(JsonGenerator.PRETTY_PRINTING);
             }
             factory = Json.createGeneratorFactory(config);
+        }
+    }
+
+    protected void after(final Generator generator, final ExtLogRecord record) throws Exception {
+        if (!envKeys.isEmpty()) {
+            for (Map.Entry<String,String> item : envKeys.entrySet()) {
+                generator.add(item.getKey(), System.getenv(item.getValue()));
+            }
         }
     }
 

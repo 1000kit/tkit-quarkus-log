@@ -100,4 +100,10 @@ public class LogJsonConfig {
      */
     @ConfigItem(name = "keys.type", defaultValue = EMPTY_LIST)
     List<String> typeKeys = new ArrayList<>();
+
+    /**
+     * Environment keys.
+     */
+    @ConfigItem(name = "keys.env", defaultValue = EMPTY_LIST)
+    List<String> envKeys = new ArrayList<>();
 }

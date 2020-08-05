@@ -96,6 +96,7 @@ JSON formatter configuration:
  * quarkus.tkit.log.console.json.keys.group - comma separated list of MDC group prefix and root key`mdc_prefix=root_key`. Group all MDC keys with a prefix.
  * quarkus.tkit.log.console.json.keys.ignore - ignore key.
  * quarkus.tkit.log.console.json.keys.type - comma separated list of key and type `key=long`. Types are `int`,`long` and `double`.
+ * quarkus.tkit.log.console.json.keys.env - comma separated list of mapping `key=env_variable`
          
 #### Configuration of external libraries
 

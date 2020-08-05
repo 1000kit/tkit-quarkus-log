@@ -63,6 +63,9 @@ public class LogJsonRecorder {
         Map<String, String> typeKeys = convertToMap(config.typeKeys);
         formatter.addTypeKeys(typeKeys);
 
+        Map<String, String> envKeys = convertToMap(config.envKeys);
+        formatter.addEnvKeys(envKeys);
+
         if (!empty(config.ignoreKeys)) {
             formatter.addIgnoreKeys(new HashSet<>(config.ignoreKeys));
         }
