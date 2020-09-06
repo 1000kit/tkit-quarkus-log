@@ -22,15 +22,18 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-core</artifactId>
             <scope>provided</scope>
+            <version>${quarkus.version}</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
             <scope>provided</scope>
+            <version>${quarkus.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
             <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+            <version>${jboss-jaxrs-api_2.1_spec.version}</version>
         </dependency>
     </dependencies>
 
