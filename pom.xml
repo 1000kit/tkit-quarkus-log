@@ -52,7 +52,7 @@
     </modules>
 
     <properties>
-        <quarkus.version>1.7.2.Final</quarkus.version>
+        <quarkus.version>1.8.1.Final</quarkus.version>
         <!-- check from quarkus bom -->
         <jboss.logmanager.version>1.0.4</jboss.logmanager.version>
         <jboss-jaxrs-api_2.1_spec.version>2.0.1.Final</jboss-jaxrs-api_2.1_spec.version>
