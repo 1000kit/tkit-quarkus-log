@@ -69,6 +69,10 @@ public class LogJsonRecorder {
         if (!empty(config.ignoreKeys)) {
             formatter.addIgnoreKeys(new HashSet<>(config.ignoreKeys));
         }
+
+        if (config.splitStacktracesAfter.isPresent()) {
+            formatter.setSplitStacktracesAfter(config.splitStacktracesAfter.get());
+        }
         return new RuntimeValue<>(Optional.of(formatter));
     }
 

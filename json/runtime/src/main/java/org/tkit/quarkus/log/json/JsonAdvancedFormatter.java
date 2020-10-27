@@ -17,6 +17,7 @@
 
 package org.tkit.quarkus.log.json;
 
+import java.io.StringReader;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -31,7 +32,6 @@ import javax.json.stream.JsonGeneratorFactory;
 
 import org.jboss.logmanager.ExtLogRecord;
 import org.jboss.logmanager.PropertyValues;
-import org.jboss.logmanager.formatters.StructuredFormatter;
 
 /**
  * A formatter that outputs the record into JSON format optionally printing details.
@@ -51,7 +51,7 @@ import org.jboss.logmanager.formatters.StructuredFormatter;
  * @author <a href="mailto:jperkins@redhat.com">James R. Perkins</a>
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class JsonAdvancedFormatter extends StructuredFormatter {
+public class JsonAdvancedFormatter extends ExtendedStructureFormatter {
 
     private final Map<String, Object> config;
 
@@ -245,6 +245,17 @@ public class JsonAdvancedFormatter extends StructuredFormatter {
                 }
             }
             addObject(key, value);
+            return this;
+        }
+
+        @Override
+        public Generator addJsonString(final String key, final String value) {
+            try (StringReader reader = new StringReader(value)){
+                generator.write(key, Json.createReader(reader).readValue());
+            } catch (Exception e) {
+                //write it at least as string
+                return add(key, value);
+            }
             return this;
         }
 

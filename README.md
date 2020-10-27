@@ -97,6 +97,8 @@ JSON formatter configuration:
  * quarkus.tkit.log.console.json.keys.ignore - ignore key.
  * quarkus.tkit.log.console.json.keys.type - comma separated list of key and type `key=long`. Types are `int`,`long` and `double`.
  * quarkus.tkit.log.console.json.keys.env - comma separated list of mapping `key=env_variable`
+ * quarkus.tkit.log.console.json.splitStacktracesAfter - split messages with stacktraces after N characters. Only works with `formatted` exception output type
+ * quarkus.tkit.log.console.json.exception-output-type - how should the exceptions be formatted: `detailed` = stacktrace is serialized to json array, `formatted` = similar to standard output of exception logs(with tabs and formatting)
          
 #### Configuration of external libraries
 

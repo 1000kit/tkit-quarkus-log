@@ -20,6 +20,7 @@ import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 import org.jboss.logmanager.formatters.StructuredFormatter;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,8 +61,8 @@ public class LogJsonConfig {
     /**
      * The exception output type to specify.
      */
-    @ConfigItem(defaultValue = "detailed")
-    StructuredFormatter.ExceptionOutputType exceptionOutputType;
+    @ConfigItem(defaultValue = "formatted")
+    ExtendedStructureFormatter.ExceptionOutputType exceptionOutputType;
     /**
      * Enable printing of more details in the log.
      * <p>
@@ -106,4 +107,10 @@ public class LogJsonConfig {
      */
     @ConfigItem(name = "keys.env", defaultValue = EMPTY_LIST)
     List<String> envKeys = new ArrayList<>();
+
+    /**
+     * Number of characters after which the stacktrace is split and we produce linked messages
+     */
+    @ConfigItem(name="splitStacktracesAfter",defaultValue = "12000")
+    Optional<Integer> splitStacktracesAfter;
 }
