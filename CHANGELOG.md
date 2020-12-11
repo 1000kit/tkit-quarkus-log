@@ -1,3 +1,6 @@
+# 1.4.0
+
+Feat: add support for ignore pattern configuration. Set property `tkit.log.ignore.pattern` to specify regex of excluded classes.
 # 1.3.0
 
 JSON Log: add support for message splitting, useful for Docker logs on many envs, as they have a 16KB limit on length.

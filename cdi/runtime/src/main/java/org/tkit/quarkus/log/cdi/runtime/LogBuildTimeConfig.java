@@ -17,6 +17,7 @@ package org.tkit.quarkus.log.cdi.runtime;
 
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
 
@@ -37,5 +38,12 @@ public class LogBuildTimeConfig {
      */
     @ConfigItem(name = "packages", defaultValue = "org.tkit")
     public List<String> packages;
+
+
+    /**
+     * Specify ignore pattern.
+     */
+    @ConfigItem(name = "ignore.pattern", defaultValue = "")
+    public String ignorePattern;
 
 }
