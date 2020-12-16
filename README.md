@@ -19,17 +19,17 @@
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-cdi</artifactId>
     <version>1.2.0</version>
-<dependency>
+</dependency>
 <dependency>
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-rs</artifactId>
     <version>1.2.0</version>
-<dependency>
+</dependency>
 <dependency>
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-json</artifactId>
     <version>1.2.0</version>
-<dependency>
+</dependency>
 ```
 The interceptor for the logger will be activated automatically.
 
