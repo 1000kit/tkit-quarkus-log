@@ -83,7 +83,7 @@ public class LogProcessor {
     public AnnotationsTransformerBuildItem interceptorBinding() {
         return new AnnotationsTransformerBuildItem(new AnnotationsTransformer() {
 
-            private Pattern ignorePattern = Pattern.compile(buildConfig.ignorePattern);
+            private Pattern ignorePattern = buildConfig.ignorePattern.isPresent() ? Pattern.compile(buildConfig.ignorePattern.get()): null;
 
             @Override
             public boolean appliesTo(AnnotationTarget.Kind kind) {
@@ -104,7 +104,7 @@ public class LogProcessor {
             }
 
             private boolean matchesIgnorePattern(String name) {
-                if (buildConfig.ignorePattern == null || buildConfig.ignorePattern.isBlank()) {
+                if (buildConfig.ignorePattern.isEmpty() || buildConfig.ignorePattern.get().isBlank()) {
                     return false;
                 }
                 boolean matches = ignorePattern.matcher(name).matches();

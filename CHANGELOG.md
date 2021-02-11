@@ -1,3 +1,8 @@
+# 1.4.1
+
+Fix: reduce the priority of the logging interceptor
+Fix: make the ignorePattern config value optional
+
 # 1.4.0
 
 Feat: add support for ignore pattern configuration. Set property `tkit.log.ignore.pattern` to specify regex of excluded classes.

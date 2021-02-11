@@ -20,6 +20,7 @@ import io.quarkus.runtime.annotations.ConfigRoot;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Build configuration.
@@ -44,6 +45,6 @@ public class LogBuildTimeConfig {
      * Specify ignore pattern.
      */
     @ConfigItem(name = "ignore.pattern", defaultValue = "")
-    public String ignorePattern;
+    public Optional<String> ignorePattern;
 
 }

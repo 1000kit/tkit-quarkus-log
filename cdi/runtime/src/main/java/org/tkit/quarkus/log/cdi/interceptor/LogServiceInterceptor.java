@@ -43,7 +43,7 @@ import java.util.concurrent.CompletionStage;
  */
 @Interceptor
 @LogService
-@Priority(Interceptor.Priority.PLATFORM_BEFORE)
+@Priority(Interceptor.Priority.LIBRARY_BEFORE + 2)
 public class LogServiceInterceptor {
 
     public static final String PROP_DISABLE_PROTECTED_METHODS = "tkit.log.method.protected.disable";
