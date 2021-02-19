@@ -22,8 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.quarkus.log.cdi.LogService;
 import org.tkit.quarkus.log.cdi.interceptor.InterceptorContext;
-import org.tkit.quarkus.log.cdi.interceptor.LogServiceInterceptor;
 import org.tkit.quarkus.log.cdi.interceptor.LogConfig;
+import org.tkit.quarkus.log.cdi.interceptor.LogServiceInterceptor;
 
 import javax.ws.rs.container.*;
 import javax.ws.rs.core.Context;
@@ -33,6 +33,7 @@ import javax.ws.rs.ext.Provider;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.tkit.quarkus.log.rs.RestConfig.convert;
 
@@ -42,7 +43,7 @@ import static org.tkit.quarkus.log.rs.RestConfig.convert;
 @Provider
 @LogService(log = false)
 public class RestLogInterceptor implements ContainerRequestFilter, ContainerResponseFilter {
-
+    
     /**
      * The annotation interceptor property.
      */
@@ -81,7 +82,7 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
     /**
      * Headers log parameters
      */
-    private static final Map<String,String> headersLog = new HashMap<>();
+    private static final Map<String, String> headersLog = new HashMap<>();
 
     static {
         Config config = ConfigProvider.getConfig();
@@ -186,6 +187,9 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
                     MDC.remove("rs-response-status");
                     MDC.remove("rs-response-reason");
                     MDC.remove("rs-response-entity");
+
+                    Optional<String> prefixToClear = ConfigProvider.getConfig().getOptionalValue("quarkus.tkit.log.customdata.prefix", String.class);
+                    prefixToClear.ifPresent(value -> MDC.getMap().keySet().stream().filter(s -> s.startsWith(value)).forEach(MDC::remove));
                 }
             }
         }

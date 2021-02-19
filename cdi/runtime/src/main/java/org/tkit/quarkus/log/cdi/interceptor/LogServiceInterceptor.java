@@ -22,6 +22,7 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.quarkus.log.cdi.LogExclude;
+import org.tkit.quarkus.log.cdi.LogFriendlyException;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import javax.annotation.Priority;
@@ -30,11 +31,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
@@ -65,6 +62,100 @@ public class LogServiceInterceptor {
     @Inject
     @ConfigProperty(name = "tkit.log.mdc", defaultValue = "false")
     boolean mdcLog;
+
+    @Inject
+    @ConfigProperty(name = "quarkus.tkit.log.mdc.errorKey", defaultValue = "errorNumber")
+    public String errorNumberKey;
+
+    /**
+     * Gets the service class name.
+     *
+     * @param object the target class.
+     * @return the corresponding class name.
+     */
+    private static String getObjectClassName(Object object) {
+        if (object instanceof Proxy) {
+            Class<?>[] interf = object.getClass().getInterfaces();
+            if (interf.length > 0) {
+                return getClassName(interf[0]);
+            }
+        }
+        return getClassName(object.getClass());
+    }
+
+    /**
+     * Gets the service class name.
+     *
+     * @param clazz the target class.
+     * @return the corresponding class name.
+     */
+    private static String getClassName(Class<?> clazz) {
+        if (clazz != null && clazz.getSuperclass() != null) {
+            return clazz.getSuperclass().getName();
+        }
+        if (clazz != null) {
+            return clazz.getName();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the logger service annotation.
+     *
+     * @param clazz                  the class.
+     * @param method                 the method.
+     * @param disableProtectedMethod {@code true} to disable to log protected methods.
+     * @return the logger service annotation.
+     */
+    public static LogService getLoggerServiceAno(Class<?> clazz, String className, Method method, boolean disableProtectedMethod) {
+
+        if (disableProtectedMethod && Modifier.isProtected(method.getModifiers())) {
+            return createLoggerService(false, false);
+        }
+        Config config = ConfigProvider.getConfig();
+        String mc = className + "." + method.getName() + "/tkit-log/";
+        String c = className + "/tkit-log/";
+
+        Optional<Boolean> log = config.getOptionalValue(mc + "log", Boolean.class);
+        Optional<Boolean> trace = config.getOptionalValue(mc + "trace", Boolean.class);
+        LogService anno = method.getAnnotation(LogService.class);
+        if (anno != null) {
+            return createLoggerService(log.orElse(anno.log()), trace.orElse(anno.stacktrace()));
+        }
+        Optional<Boolean> clog = config.getOptionalValue(c + "log", Boolean.class);
+        Optional<Boolean> ctrace = config.getOptionalValue(c + "trace", Boolean.class);
+        LogService canno = clazz.getAnnotation(LogService.class);
+        if (canno != null) {
+            return createLoggerService(log.orElse(clog.orElse(canno.log())), trace.orElse(ctrace.orElse(canno.stacktrace())));
+        }
+        return createLoggerService(log.orElse(clog.orElse(true)), trace.orElse(ctrace.orElse(true)));
+    }
+
+    /**
+     * Creates the logger service.
+     *
+     * @param log        the log flag.
+     * @param stacktrace the stacktrace flag.
+     * @return the corresponding logger service.
+     */
+    private static LogService createLoggerService(boolean log, boolean stacktrace) {
+        return new LogService() {
+            @Override
+            public boolean log() {
+                return log;
+            }
+
+            @Override
+            public boolean stacktrace() {
+                return stacktrace;
+            }
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return LogService.class;
+            }
+        };
+    }
 
     /**
      * The method execution.
@@ -166,6 +257,7 @@ public class LogServiceInterceptor {
                     MDC.remove("status");
                     MDC.remove("result");
                     MDC.remove("time");
+                    MDC.remove(errorNumberKey);
                 }
             }
         } else {
@@ -191,102 +283,21 @@ public class LogServiceInterceptor {
             MDC.put("result", context.result);
             MDC.put("time", context.time);
             MDC.put("status", "error");
+
+            if (ex instanceof LogFriendlyException) {
+                MDC.put(errorNumberKey, ((LogFriendlyException) ex).getErrorNumber());
+            }
         }
         logger.error("{}", LogConfig.msgFailed(context));
         boolean stacktrace = ano.stacktrace();
-        if (stacktrace) {
+
+        if (ex instanceof LogFriendlyException) {
+            if (stacktrace && ((LogFriendlyException) ex).shouldLogStacktrace()) {
+                logger.error("Error ", ex);
+            }
+        } else if (stacktrace) {
             logger.error("Error ", ex);
         }
-    }
-
-    /**
-     * Gets the service class name.
-     *
-     * @param object the target class.
-     * @return the corresponding class name.
-     */
-    private static String getObjectClassName(Object object) {
-        if (object instanceof Proxy) {
-            Class<?>[] interf = object.getClass().getInterfaces();
-            if (interf.length > 0) {
-                return getClassName(interf[0]);
-            }
-        }
-        return getClassName(object.getClass());
-    }
-
-    /**
-     * Gets the service class name.
-     *
-     * @param clazz the target class.
-     * @return the corresponding class name.
-     */
-    private static String getClassName(Class<?> clazz) {
-        if (clazz != null && clazz.getSuperclass() != null) {
-            return clazz.getSuperclass().getName();
-        }
-        if (clazz != null) {
-            return clazz.getName();
-        }
-        return null;
-    }
-
-    /**
-     * Gets the logger service annotation.
-     *
-     * @param clazz  the class.
-     * @param method the method.
-     * @param disableProtectedMethod {@code true} to disable to log protected methods.
-     * @return the logger service annotation.
-     */
-    public static LogService getLoggerServiceAno(Class<?> clazz, String className, Method method, boolean disableProtectedMethod) {
-
-        if (disableProtectedMethod && Modifier.isProtected(method.getModifiers())) {
-            return createLoggerService(false, false);
-        }
-        Config config = ConfigProvider.getConfig();
-        String mc = className + "." + method.getName() + "/tkit-log/";
-        String c = className + "/tkit-log/";
-
-        Optional<Boolean> log = config.getOptionalValue(mc + "log", Boolean.class);
-        Optional<Boolean> trace = config.getOptionalValue(mc + "trace", Boolean.class);
-        LogService anno = method.getAnnotation(LogService.class);
-        if (anno != null) {
-            return createLoggerService(log.orElse(anno.log()), trace.orElse(anno.stacktrace()));
-        }
-        Optional<Boolean> clog = config.getOptionalValue(c + "log", Boolean.class);
-        Optional<Boolean> ctrace = config.getOptionalValue(c + "trace", Boolean.class);
-        LogService canno = clazz.getAnnotation(LogService.class);
-        if (canno != null) {
-            return createLoggerService(log.orElse(clog.orElse(canno.log())), trace.orElse(ctrace.orElse(canno.stacktrace())));
-        }
-        return createLoggerService(log.orElse(clog.orElse(true)), trace.orElse(ctrace.orElse(true)));
-    }
-
-    /**
-     * Creates the logger service.
-     *
-     * @param log        the log flag.
-     * @param stacktrace the stacktrace flag.
-     * @return the corresponding logger service.
-     */
-    private static LogService createLoggerService(boolean log, boolean stacktrace) {
-        return new LogService() {
-            @Override
-            public boolean log() {
-                return log;
-            }
-
-            @Override
-            public boolean stacktrace() {
-                return stacktrace;
-            }
-
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return LogService.class;
-            }
-        };
     }
 
     /**

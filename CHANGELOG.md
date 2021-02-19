@@ -1,3 +1,8 @@
+# 1.4.2
+
+Add: LogFriendlyException interface to handle special exception logging, support for `quarkus.tkit.log.customdata.prefix` property, support for `quarkus.tkit.log.mdc.errorKey` property
+Fix: clear data when request is finished
+
 # 1.4.1
 
 Fix: reduce the priority of the logging interceptor
