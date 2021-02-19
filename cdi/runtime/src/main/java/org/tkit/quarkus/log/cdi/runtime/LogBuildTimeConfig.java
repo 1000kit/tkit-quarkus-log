@@ -17,7 +17,6 @@ package org.tkit.quarkus.log.cdi.runtime;
 
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,5 +45,18 @@ public class LogBuildTimeConfig {
      */
     @ConfigItem(name = "ignore.pattern", defaultValue = "")
     public Optional<String> ignorePattern;
+
+    /**
+     * Mdc error key for FBN error code
+     */
+    @ConfigItem(name = "mdc.errorKey", defaultValue = "errorNumber")
+    public String errorNumberKey;
+
+    /**
+     * Prefix for custom data mdc entries
+     */
+    @ConfigItem(name = "customdata.prefix")
+    public Optional<String> customDataPrefix;
+
 
 }

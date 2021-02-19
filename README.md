@@ -18,17 +18,17 @@
 <dependency>
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-cdi</artifactId>
-    <version>1.2.0</version>
+    <version>1.4.2</version>
 </dependency>
 <dependency>
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-rs</artifactId>
-    <version>1.2.0</version>
+    <version>1.4.2</version>
 </dependency>
 <dependency>
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-json</artifactId>
-    <version>1.2.0</version>
+    <version>1.4.2</version>
 </dependency>
 ```
 The interceptor for the logger will be activated automatically.
@@ -69,7 +69,7 @@ To configure the message format of the start, succeed, failed and future you can
  * tkit.log.succeed - message format for the method succeed log. Default: ```{0}({1}):{2} [{3}s] succeed.```
  * tkit.log.failed - message format for the failed method log. Default: ```{0}({1}):{2} [{3}s] failed.```
  * tkit.log.futureStart - message format for the future return type method. Default: ```{0}({1}) future started.```
- 
+
 #### REST service configuration
 
 The logs of the rest endpoint could you configure with these variables:
@@ -99,7 +99,6 @@ JSON formatter configuration:
  * quarkus.tkit.log.console.json.keys.env - comma separated list of mapping `key=env_variable`
  * quarkus.tkit.log.console.json.splitStacktracesAfter - split messages with stacktraces after N characters. Only works with `formatted` exception output type
  * quarkus.tkit.log.console.json.exception-output-type - how should the exceptions be formatted: `detailed` = stacktrace is serialized to json array, `formatted` = similar to standard output of exception logs(with tabs and formatting)
-         
 #### Configuration of external libraries
 
 To configure external libraries you can use this configuration pattern for method level
@@ -115,6 +114,12 @@ org.tkit.test.Service.start/tkit-log/log=false
 org.tkit.test.Service/tkit-log/log=false
 
 The ```trace``` attribute will printout the stacktrace of the exception in the interceptor.
+
+#### Stack trace logging - configuration
+
+* LogFriendlyException - interface for handling special exception logging, implement to configure if stack trace should be printed or not
+* quarkus.tkit.log.mdc.errorKey - MDC key for FBN error number
+* quarkus.tkit.log.customdata.prefix - MDC key for business data
 
 ## Release
 
