@@ -17,9 +17,7 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc-deployment</artifactId>
-            <scope>provided</scope>
-            <version>${quarkus.version}</version>
-        </dependency>
+        </dependency>   
         <dependency>
             <groupId>org.tkit.quarkus</groupId>
             <artifactId>tkit-quarkus-log-cdi</artifactId>

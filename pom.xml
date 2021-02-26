@@ -52,7 +52,7 @@
     </modules>
 
     <properties>
-        <quarkus.version>1.8.1.Final</quarkus.version>
+        <quarkus.version>1.12.0.Final</quarkus.version>
         <!-- check from quarkus bom -->
         <jboss.logmanager.version>1.0.4</jboss.logmanager.version>
         <jboss-jaxrs-api_2.1_spec.version>2.0.1.Final</jboss-jaxrs-api_2.1_spec.version>
@@ -81,7 +81,13 @@
                 <version>8.0.0</version>
                 <scope>provided</scope>
             </dependency>
-
+            <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <scope>import</scope>
+                <type>pom</type>
+                <version>${quarkus.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

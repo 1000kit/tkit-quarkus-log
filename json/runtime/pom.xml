@@ -16,13 +16,10 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-core</artifactId>
-            <version>${quarkus.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jsonp</artifactId>
-            <version>${quarkus.version}</version>
         </dependency>
 
         <dependency>
