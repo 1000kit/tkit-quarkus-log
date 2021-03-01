@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class JavaTypesLogParamValue {
 
@@ -33,6 +34,7 @@ public class JavaTypesLogParamValue {
         result.put(InputStream.class, JavaTypesLogParamValue::inputStream);
         result.put(Map.class, JavaTypesLogParamValue::map);
         result.put(OutputStream.class, JavaTypesLogParamValue::outputStream);
+        result.put(Stream.class, JavaTypesLogParamValue::stream);
         return result;
     }
 
@@ -212,4 +214,13 @@ public class JavaTypesLogParamValue {
         return sb.toString();
     }
 
+    /**
+     * Mapping method for the stream.
+     *
+     * @param parameter to map.
+     * @return the corresponding string result for the log.
+     */
+    public static String stream(Object parameter) {
+        return parameter.getClass().getSimpleName();
+    }
 }
