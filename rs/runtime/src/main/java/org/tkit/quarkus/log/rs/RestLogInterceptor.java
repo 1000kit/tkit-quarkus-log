@@ -135,7 +135,8 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
 
             // create the logger
             Logger logger = LoggerFactory.getLogger(resourceInfo.getResourceClass());
-            logger.info("{}", LogConfig.msg(messageStart, new Object[]{context.method, requestContext.getUriInfo().getRequestUri(), requestContext.hasEntity()}));
+            boolean hasEntity = requestContext.getMediaType() != null && requestContext.getLength() > 0;
+            logger.info("{}", LogConfig.msg(messageStart, new Object[]{context.method, requestContext.getUriInfo().getRequestUri(), hasEntity}));
         }
     }
 
