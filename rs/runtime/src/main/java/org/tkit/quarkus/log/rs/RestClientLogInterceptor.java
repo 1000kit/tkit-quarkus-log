@@ -21,6 +21,7 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.quarkus.log.cdi.LogService;
+import org.tkit.quarkus.log.cdi.context.TkitLogContext;
 import org.tkit.quarkus.log.cdi.interceptor.InterceptorContext;
 import org.tkit.quarkus.log.cdi.interceptor.LogConfig;
 
@@ -98,6 +99,11 @@ public class RestClientLogInterceptor implements ClientRequestFilter, ClientResp
         if (disable) {
             return;
         }
+        //propagate our log context if present
+        if (TkitLogContext.get() != null) {
+            requestContext.getHeaders().add(TkitLogContext.X_CORRELATION_ID, TkitLogContext.get().correlationId);
+        }
+
         InterceptorContext context = new InterceptorContext(requestContext.getMethod(), requestContext.getUri().toString());
 
         // add header parameters to MDC
@@ -114,7 +120,7 @@ public class RestClientLogInterceptor implements ClientRequestFilter, ClientResp
             MDC.put("rs-client-uri", context.parameters);
         }
         requestContext.setProperty(CONTEXT, context);
-        log.info("{}", LogConfig.msg(messageStart, new Object[]{requestContext.getMethod(), requestContext.getUri(), requestContext.hasEntity()}));
+        log.info(LogConfig.msg(messageStart, new Object[]{requestContext.getMethod(), requestContext.getUri(), requestContext.hasEntity()}));
     }
 
     /**
@@ -141,7 +147,7 @@ public class RestClientLogInterceptor implements ClientRequestFilter, ClientResp
                     MDC.put("rs-client-response-entity", responseContext.hasEntity());
                 }
 
-                log.info("{}", LogConfig.msg(messageSucceed, new Object[]{context.method, requestContext.getUri(), context.time, status.getStatusCode(), context.result, responseContext.hasEntity()}));
+                log.info(LogConfig.msg(messageSucceed, new Object[]{context.method, requestContext.getUri(), context.time, status.getStatusCode(), context.result, responseContext.hasEntity()}));
             } finally {
                 // mdc log
                 for (String e : headersLog.keySet()) {

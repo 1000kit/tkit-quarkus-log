@@ -21,6 +21,8 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.quarkus.log.cdi.LogService;
+import org.tkit.quarkus.log.cdi.context.CorrelationScope;
+import org.tkit.quarkus.log.cdi.context.TkitLogContext;
 import org.tkit.quarkus.log.cdi.interceptor.InterceptorContext;
 import org.tkit.quarkus.log.cdi.interceptor.LogConfig;
 import org.tkit.quarkus.log.cdi.interceptor.LogServiceInterceptor;
@@ -34,6 +36,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.tkit.quarkus.log.rs.RestConfig.convert;
 
@@ -43,7 +46,7 @@ import static org.tkit.quarkus.log.rs.RestConfig.convert;
 @Provider
 @LogService(log = false)
 public class RestLogInterceptor implements ContainerRequestFilter, ContainerResponseFilter {
-    
+
     /**
      * The annotation interceptor property.
      */
@@ -115,6 +118,18 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
         LogService ano = LogServiceInterceptor.getLoggerServiceAno(resourceInfo.getResourceClass(), resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod(), disableProtectedMethod);
         requestContext.setProperty(ANO, ano);
 
+        //start log scope/correlation id
+        String correlationId;
+        if (requestContext.getHeaders().containsKey(TkitLogContext.X_CORRELATION_ID)) {
+            //if client has sent us correlation id, take it over
+            correlationId = requestContext.getHeaders().getFirst(TkitLogContext.X_CORRELATION_ID);
+        } else {
+            //correlation id not sent by client, we start our own
+            correlationId = UUID.randomUUID().toString();
+        }
+        CorrelationScope correlationScope = new CorrelationScope(correlationId);
+        TkitLogContext.set(correlationScope);
+
         // add header parameters to MDC
         for (Map.Entry<String, String> e : headersLog.entrySet()) {
             String tmp = requestContext.getHeaderString(e.getKey());
@@ -148,6 +163,7 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
         if (disable) {
             return;
         }
+
         LogService ano = (LogService) requestContext.getProperty(ANO);
         if (ano != null && ano.log()) {
             try {
@@ -176,6 +192,8 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
                                 responseContext.hasEntity()
                         }));
             } finally {
+                //we are exiting server context, clear the log context
+                TkitLogContext.set(null);
                 // mdc log
                 for (String e : headersLog.keySet()) {
                     MDC.remove(e);

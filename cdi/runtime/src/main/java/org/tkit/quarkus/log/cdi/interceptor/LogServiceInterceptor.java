@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.tkit.quarkus.log.cdi.LogExclude;
 import org.tkit.quarkus.log.cdi.LogFriendlyException;
 import org.tkit.quarkus.log.cdi.LogService;
+import org.tkit.quarkus.log.cdi.context.CorrelationScope;
+import org.tkit.quarkus.log.cdi.context.TkitLogContext;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -33,6 +35,7 @@ import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -170,8 +173,15 @@ public class LogServiceInterceptor {
         Method method = ic.getMethod();
         String className = getObjectClassName(ic.getTarget());
 
+
         LogService ano = getLoggerServiceAno(ic.getTarget().getClass(), className, method, disableProtectedMethod);
         if (ano.log()) {
+            boolean isEntrypoint = false;
+            if (TkitLogContext.get() == null) {
+                isEntrypoint = true;
+                CorrelationScope correlationScope = new CorrelationScope(UUID.randomUUID().toString());
+                TkitLogContext.set(correlationScope);
+            }
 
             Logger logger = LoggerFactory.getLogger(className);
             String parameters = getValuesString(ic.getParameters(), method.getParameters());
@@ -186,7 +196,7 @@ public class LogServiceInterceptor {
                     MDC.put("parameters", context.parameters);
                     MDC.put("status", "started");
                 }
-                logger.info("{}", LogConfig.msgStart(context));
+                logger.info(LogConfig.msgStart(context));
 
                 result = ic.proceed();
 
@@ -199,7 +209,7 @@ public class LogServiceInterceptor {
                         MDC.put("status", "future");
                     }
 
-                    logger.info("{}", LogConfig.msgFutureStart(context));
+                    logger.info(LogConfig.msgFutureStart(context));
 
                     CompletionStage cs = (CompletionStage) result;
                     cs.toCompletableFuture().whenComplete((u, eex) -> {
@@ -222,7 +232,7 @@ public class LogServiceInterceptor {
                                 MDC.put("time", context.time);
                             }
 
-                            logger.info("{}", LogConfig.msgSucceed(context));
+                            logger.info(LogConfig.msgSucceed(context));
                         }
                     });
                 } else {
@@ -242,7 +252,7 @@ public class LogServiceInterceptor {
                     }
 
                     // log the success message
-                    logger.info("{}", LogConfig.msgSucceed(context));
+                    logger.info(LogConfig.msgSucceed(context));
                 }
             } catch (InvocationTargetException ie) {
                 handleException(context, logger, ano, ie.getCause());
@@ -251,6 +261,10 @@ public class LogServiceInterceptor {
                 handleException(context, logger, ano, ex);
                 throw ex;
             } finally {
+                if (isEntrypoint){
+                    TkitLogContext.set(null);
+                    MDC.remove("X-Correlation-ID");
+                }
                 if (mdcLog) {
                     MDC.remove("method");
                     MDC.remove("parameters");
@@ -288,7 +302,7 @@ public class LogServiceInterceptor {
                 MDC.put(errorNumberKey, ((LogFriendlyException) ex).getErrorNumber());
             }
         }
-        logger.error("{}", LogConfig.msgFailed(context));
+        logger.error(LogConfig.msgFailed(context));
         boolean stacktrace = ano.stacktrace();
 
         if (ex instanceof LogFriendlyException) {

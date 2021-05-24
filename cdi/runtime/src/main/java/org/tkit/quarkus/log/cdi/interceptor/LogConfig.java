@@ -56,7 +56,8 @@ public class LogConfig {
         messageStart = new MessageFormat(config.getOptionalValue("org.tkit.logger.start", String.class).orElse("{0}({1}) started."));
         messageSucceed = new MessageFormat(config.getOptionalValue("org.tkit.logger.succeed", String.class).orElse("{0}({1}):{2} [{3}s] succeed."));
         messageFailed = new MessageFormat(config.getOptionalValue("org.tkit.logger.failed", String.class).orElse("{0}({1}):{2} [{3}s] failed."));
-        messageFutureStart = new MessageFormat(config.getOptionalValue("org.tkit.logger.futureStart", String.class).orElse("{0}({1}) future started."));
+        messageFutureStart = new MessageFormat(config.getOptionalValue("org.tkit.logger.futureStart", String.class).orElse("{0}({1}) future started" +
+                "."));
     }
 
     /**
@@ -72,7 +73,7 @@ public class LogConfig {
      * @param context the interceptor context.
      * @return the log message.
      */
-    static Object msgFailed(InterceptorContext context) {
+    static String msgFailed(InterceptorContext context) {
         return msg(messageFailed, new Object[]{context.method, context.parameters, context.result, context.time});
     }
 
@@ -82,7 +83,7 @@ public class LogConfig {
      * @param context the interceptor context.
      * @return the log message.
      */
-    static Object msgSucceed(InterceptorContext context) {
+    static String msgSucceed(InterceptorContext context) {
         return msg(messageSucceed, new Object[]{context.method, context.parameters, context.result, context.time});
     }
 
@@ -92,7 +93,7 @@ public class LogConfig {
      * @param context the interceptor context.
      * @return the log message.
      */
-    static Object msgFutureStart(InterceptorContext context) {
+    static String msgFutureStart(InterceptorContext context) {
         return msg(messageFutureStart, new Object[]{context.method, context.parameters, context.result, context.time});
     }
 
@@ -102,7 +103,7 @@ public class LogConfig {
      * @param context the interceptor context.
      * @return the log message.
      */
-    static Object msgStart(InterceptorContext context) {
+    static String msgStart(InterceptorContext context) {
         return msg(messageStart, new Object[]{context.method, context.parameters});
     }
 
@@ -113,13 +114,8 @@ public class LogConfig {
      * @param parameters the log entry parameters.
      * @return the log parameter.
      */
-    public static Object msg(MessageFormat mf, Object[] parameters) {
-        return new Object() {
-            @Override
-            public String toString() {
-                return mf.format(parameters, new StringBuffer(), null).toString();
-            }
-        };
+    public static String msg(MessageFormat mf, Object[] parameters) {
+        return mf.format(parameters, new StringBuffer(), null).toString();
     }
 
 }

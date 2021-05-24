@@ -1,3 +1,7 @@
+# 1.4.6 
+
+Add: support for x-correlation-id propagation
+
 # 1.4.2
 
 Add: LogFriendlyException interface to handle special exception logging, support for `quarkus.tkit.log.customdata.prefix` property, support for `quarkus.tkit.log.mdc.errorKey` property
