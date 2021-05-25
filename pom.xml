@@ -6,7 +6,7 @@
 
     <groupId>org.tkit.quarkus</groupId>
     <artifactId>tkit-quarkus-log-parent</artifactId>
-    <version>1.4.6-SNAPSHOT</version>
+    <version>1.4.7-SNAPSHOT</version>
     <name>tkit-quarkus-log-parent</name>
     <packaging>pom</packaging>
 
