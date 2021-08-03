@@ -1,3 +1,7 @@
+#1.4.7
+
+add: RequestData.principal
+
 # 1.4.6 
 
 Add: support for x-correlation-id propagation
