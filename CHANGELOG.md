@@ -1,4 +1,7 @@
-#1.4.7
+# 1.4.8
+add: BusinessLoggingUtil class for logging business data
+
+# 1.4.7
 
 add: RequestData.principal
 
