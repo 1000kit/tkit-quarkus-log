@@ -20,6 +20,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tkit.quarkus.log.cdi.BusinessLoggingUtil;
 import org.tkit.quarkus.log.cdi.LogService;
 import org.tkit.quarkus.log.cdi.context.CorrelationScope;
 import org.tkit.quarkus.log.cdi.context.TkitLogContext;
@@ -35,7 +36,6 @@ import javax.ws.rs.ext.Provider;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.tkit.quarkus.log.rs.RestConfig.convert;
@@ -207,8 +207,7 @@ public class RestLogInterceptor implements ContainerRequestFilter, ContainerResp
                     MDC.remove("rs-response-reason");
                     MDC.remove("rs-response-entity");
 
-                    Optional<String> prefixToClear = ConfigProvider.getConfig().getOptionalValue("quarkus.tkit.log.customdata.prefix", String.class);
-                    prefixToClear.ifPresent(value -> MDC.getMap().keySet().stream().filter(s -> s.startsWith(value)).forEach(MDC::remove));
+                    BusinessLoggingUtil.removeAll();
                 }
             }
         }
