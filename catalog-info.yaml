@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tkit-quarkus-log
+  description: Logging extension for Quarkus. Provides logging interceptors and helpers
+spec:
+  type: library
+  lifecycle: production
+  owner: 1000kit
+  tags:
+    - java
+    - quarkus
+    - log
+    - interceptor
+    - extension
+    - lib
