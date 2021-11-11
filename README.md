@@ -5,6 +5,8 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-green?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://img.shields.io/maven-central/v/org.tkit.quarkus/tkit-quarkus-log-parent?logo=java&style=for-the-badge)](https://maven-badges.herokuapp.com/maven-central/org.tkit.quarkus/tkit-quarkus-log-parent)
 
+> `RequestDataContext` object move to the `tkit-quarkus-context` library
+
 > The version 1.0.0+ contains new package structure. For an old version please use 
 > branch [0.9](https://gitlab.com/1000kit/libs/quarkus/tkit-quarkus-log/-/tree/0.9).
 
