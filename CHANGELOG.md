@@ -1,3 +1,7 @@
+# 1.5.0
+
+feat: RequestDataContext move to the `tkit-quarkus-context` library
+
 # 1.4.8
 add: BusinessLoggingUtil class for logging business data
 
