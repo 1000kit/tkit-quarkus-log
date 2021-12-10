@@ -3,10 +3,8 @@ kind: Component
 metadata:
   name: tkit-quarkus-log
   description: Logging extension for Quarkus. Provides logging interceptors and helpers
-spec:
-  type: library
-  lifecycle: production
-  owner: 1000kit
+  annotations:
+    gitlab.com/project-slug: 1000kit/libs/quarkus/tkit-quarkus-log
   tags:
     - java
     - quarkus
@@ -14,3 +12,9 @@ spec:
     - interceptor
     - extension
     - lib
+spec:
+  type: library
+  lifecycle: production
+  owner: 1000kit
+  system: 1000kit-quarkus-libs
+
