@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <description>1000kit log library for the Quarkus framework</description>
-    <url>https://gitlab.com/1000kit/quarkus/tkit-quarkus-log</url>
+    <url>https://github.com/1000kit/tkit-quarkus-log</url>
 
     <licenses>
         <license>
@@ -22,9 +22,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://gitlab.com/1000kit/quarkus/tkit-quarkus-log.git</connection>
-        <developerConnection>scm:git:git@gitlab.com:1000kit/quarkus/tkit-quarkus-log.git</developerConnection>
-        <url>https://gitlab.com/1000kit/quarkus/tkit-quarkus-log</url>
+        <connection>scm:git:git@github.com:1000kit/tkit-quarkus-log.git</connection>
+        <developerConnection>scm:git:git@github.com:1000kit/tkit-quarkus-log.git</developerConnection>
+        <url>https://github.com/1000kit/tkit-quarkus-log</url>
     </scm>
 
     <organization>
